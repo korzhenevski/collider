@@ -10,7 +10,7 @@ app = Flask(__name__)
 logging.basicConfig(stream=sys.stderr)
 
 def log_to_file( data ):
-	with open('/tmp/urls', 'w') as fp:
+	with open('/tmp/urls', 'a') as fp:
 		fp.write( json.dumps( data ) )
 
 def update( data ):
@@ -30,8 +30,6 @@ def add_response_headers( YPResponse, YPMessage, sid  ):
 @app.route("/")
 def index():
 	action = request.args.get('action')
-	YPResponse = 1
-	msg = 'ok'
 	sid = random.getrandbits(32)  
 
 	if action == 'touch': 
