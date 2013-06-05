@@ -19,12 +19,12 @@ def update( data ):
 def remove( data ):
 	pass;
 
-def add_response_headers( headers={} ):
-	resp = make_response(f(*args, **kwargs))
+def add_response_headers( YPResponse, YPMessage, sid  ):
+	headers = { 'YPResponse' : YPResponse, 'YPMessage' : YPMessage, 'SID': sid }  			
+	resp = make_response()
 	h = resp.headers
 	for header, value in headers.items():
 		h[header] = value
-	print 'OK~'
 	return resp
 
 @app.route("/")
@@ -33,22 +33,22 @@ def index():
 	YPResponse = 1
 	msg = 'ok'
 	sid = random.getrandbits(32)  
+
 	if action == 'touch': 
 		update( request.args )
+		return add_response_headers(1, 'update ok', sid)
+
 	elif action == 'add':
 		log_to_file( request.args )
+		return add_response_headers(1, 'added ok', sid )
+
 	elif action == 'delete':
 		remove( request.args )
+		return add_response_headers(1, 'delete ok', sid )
+
 	else :
-		YPResponse = 0
-		msg = 'no action provided'
-		sid = -1
+		return add_response_headers(0, 'no action provided', -1)
 				
-	response = make_response()
-	response.headers['YPResponse'] = YPResponse
-	response.headers['YPMessage:'] = msg
-	response.headers['SID'] = sid
-	return response
 
 if __name__ == '__main__':
 	app.run()
